@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Training
 {
@@ -523,28 +524,29 @@ namespace Training
         public Human(string fullName)
         {
             FullName = fullName;
+            FirstName = GetFirstName();
+            LastName = GetLastName();
+
         }
 
         public string FullName { get; }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        public string FirstName { get ;  }
+        public string LastName { get;  }
+
+        public string GetFirstName()
+        {
+            var SplitFullname = SplitFullName();
+            var firstName = SplitFullname.First();
+            return firstName; 
+        }
+        private string[] SplitFullName() => FullName.Split(' ');
+        public string GetLastName()
+        {
+            var SplitFullname = SplitFullName();
+            var lastName = SplitFullname.Last();
+            return lastName;
+        }
+
 
         public static Human ჯიქიაგიორგი = new Human("ჯიქია გიორგი");
         public static Human გიორგისირბილაშვილი = new Human("გიორგი სირბილაშვილი");
