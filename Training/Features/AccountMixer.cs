@@ -14,16 +14,13 @@ namespace Training.Features
             foreach (var client in clients)
             {
                 var numberOfAccounts = GetRandomQuantityOfAccount();
-                for (int i = 0; i < numberOfAccounts; i++)
+                var accountsForClient = accounts.Take(numberOfAccounts).ToList();
+                foreach (var accountForClient in accountsForClient)
                 {
-                    var accountsForClient = accounts.Take(numberOfAccounts).ToList();
-                    foreach (var accountForClient in accountsForClient)
-                    {
-                        PutMoneyOnAccount(accountForClient);
-                    }
-                    client.Accounts.AddRange(accountsForClient);
-                    accounts = accounts.Skip(numberOfAccounts).ToList();
+                    client.Accounts.Add(accountForClient);
+                    PutMoneyOnAccount(accountForClient);
                 }
+                accounts = accounts.Skip(numberOfAccounts).ToList();
             }
 
             return clients;
