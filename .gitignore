@@ -11,6 +11,8 @@ Thumbs.db
 *.vspscc
 *_i.c
 *_p.c
+*.xml
+*.name
 *.ncb
 *.suo
 *.tlb
