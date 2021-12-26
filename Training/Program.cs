@@ -23,8 +23,10 @@ namespace Training
         static void Main(string[] args)
         {
             var clients = AccountMixer.Mix();
-            var topClient = წამოიღე_ყველაზე_მეტი_ფულის_მქონე_კლიენტი(clients);
+            var topClient = ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს(clients);            
         }
+
+    
 
         [ნიმუში]
         public static decimal წამოიღე_ყველაზე_მეტი_ფული_ვისაც_აქვს_ანგარიშზე_იმის_ოდენობა(List<Client> clients)
@@ -33,9 +35,11 @@ namespace Training
         }
 
         [დავალება]
-        public static decimal წამოიღე_ყველაზე_ნაკლები_ფული_ვისაც_აქვს_ანგარიშზე_იმის_ოდენობა()
+        public static decimal წამოიღე_ყველაზე_ნაკლები_ფული_ვისაც_აქვს_ანგარიშზე_იმის_ოდენობა(List<Client> clients)
         {
-            return default;
+            return clients.Select(x => x.Accounts.Sum(a => a.Value)).OrderBy(x => x).First();
+            //ან 
+            //return clients.Select(x => x.Accounts.Sum(a => a.Value)).OrderByDescending(x => x).Last();
         }
 
         [ნიმუში]
@@ -54,7 +58,15 @@ namespace Training
         [დავალება]
         private static Client წამოიღე_ყველაზე_ნაკლები_ფულის_მქონე_კლიენტი(List<Client> clients)
         {
-            return default;
+
+            var clientsWithTotalMoney = clients.Select(x => new
+            {
+                TotalMoney = x.Accounts.Sum(a => a.Value),
+                Client = x
+            });
+            var bottomClientWithMoney = clientsWithTotalMoney.OrderByDescending(x => x.TotalMoney).Last();
+
+            return bottomClientWithMoney.Client;
         }
 
         [ნიმუში]
@@ -74,9 +86,12 @@ namespace Training
         }
 
         [დავალება]
-        private static List<Client> ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს()
+        private static List<Client> ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს(List<Client> clients)
         {
-            return default;
+            var clientWithUSAndEURAccount = clients.Where(client => client.Accounts.Any(account => account.Currency == Currency.USD || account.Currency == Currency.EUR));
+
+
+            return clientWithUSAndEURAccount.ToList();
         }
 
     }
