@@ -12,7 +12,6 @@ namespace Training.BusinessObjects
         }
 
         public int ID { get; set; }
-
         public static int IDCounter { get; set; }
         public List<Account> Accounts { get; set; }
     }
