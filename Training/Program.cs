@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Training.Attributes;
 using Training.BusinessObjects;
@@ -23,7 +24,9 @@ namespace Training
         static void Main(string[] args)
         {
             var clients = AccountMixer.Mix();
-            var topClient = ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს(clients);
+            var Test = წამოიღე_ისეთი_კლიენტის_თანხის_ოდენობა_ისეთი_კლიენტებიდან_რომლის_სახელი_ყველაზე_ხშირად_გვხვდება_და_მისი_გვარი_ყველაზე_მოკლეა_მაგ_სიიდან(clients);
+
+            
         }
 
 
@@ -109,7 +112,9 @@ namespace Training
         [კითხვა("თუ რამე კითხვა გაქვს ასე გადმომეცი ხოლმე პარამეტრად")]
         private static string წამოიღე_ისეთი_კლიენტის_სახელი_რომელიც_ყველაზე_ნაკლებჯერ_გვხდება_სიაში(List<Client> clients)
         {
-            return default;
+            var bottomName = clients.GroupBy(x => x.FirstName).OrderByDescending(x => x.Count()).Last().Key;
+            
+            return bottomName;
         }
 
         [ნიმუში]
@@ -124,62 +129,115 @@ namespace Training
         [დავალება]
         private static List<Client> წამოიღე_ისეთი_კლიენტები_რომელთა_სახელები_ყველაზე_ნაკლებჯერ_გვხვდება_სიაში(List<Client> clients)
         {
-            return default;
+            var clientsWithBottomNames = clients.GroupBy(x => x.FirstName).OrderByDescending(x => x.Count()).Last().Select(x => x).ToList();
+            return clientsWithBottomNames;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ისეთი_კლიენტი_ვისაც_ყველაზე_მეტი_ფული_აქვს_ისეთი_კლიენტებიდან_რომელთა_სახელიც_ყველაზე_ნაკლებად_გვხვდება_სიაში()
-        {
-            return default;
+        private static Client წამოიღე_ისეთი_კლიენტი_ვისაც_ყველაზე_მეტი_ფული_აქვს_ისეთი_კლიენტებიდან_რომელთა_სახელიც_ყველაზე_ნაკლებად_გვხვდება_სიაში(List<Client> clients)
+        {   
+            var bottomNames = წამოიღე_ისეთი_კლიენტები_რომელთა_სახელები_ყველაზე_ნაკლებჯერ_გვხვდება_სიაში(clients);
+            var bottomNamesTopMoneyTolist = bottomNames.Select(x => new { SumMoney = x.Accounts.Sum(a => a.Value), client = x });            
+            var returnbottomNamesTopMoney = bottomNames.OrderByDescending(x => bottomNamesTopMoneyTolist.OrderByDescending(x => x.SumMoney)).First();
+            return returnbottomNamesTopMoney;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ისეთი_სახელები_რომლებიც_იწყება_ა_ასოზე_კლიენტების_სიიდან()
+        private static List<string> წამოიღე_ისეთი_სახელები_რომლებიც_იწყება_ა_ასოზე_კლიენტების_სიიდან(List<Client> clients)
         {
-            return default;
+            var firstLetter = clients.Where(x => x.FirstName.StartsWith('ა'));
+
+            List<string> namesList = new List<string>();
+           
+            foreach (var lists in firstLetter)
+            {
+                namesList.Add(lists.FirstName);
+            }
+
+            List<string> returnNameArray = namesList;           
+
+            return returnNameArray;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ისეთი_ყველაზე_ხშირი_სახელი_ისეთი_კლიენტებიდან_რომლის_გვარიც_იწყება_ბ_ასოზე_და_მთავრდება_ი_ასოზე()
+        private static string წამოიღე_ისეთი_ყველაზე_ხშირი_სახელი_ისეთი_კლიენტებიდან_რომლის_გვარიც_იწყება_ბ_ასოზე_და_მთავრდება_ი_ასოზე(List<Client> clients)
         {
-            return default;
+            var firstAndLastLetter = clients.Where(x => (x.LastName.StartsWith('ბ')) && (x.LastName.EndsWith('ი')));
+
+            var returnName = firstAndLastLetter.GroupBy(x => x.FirstName).OrderByDescending(x => x.Count()).First()
+                .Select(x => x.FirstName).First();
+
+            return returnName;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ყველაზე_ხშირი_ვალუტა_კლიენტების_სიიდან()
+        private static Currency წამოიღე_ყველაზე_ხშირი_ვალუტა_კლიენტების_სიიდან(List<Client> clients)
         {
-            return default;
+            var accounts = clients.Select(x => x.Accounts.GroupBy(x => x.Currency).OrderByDescending(x => x.Count()).First().Select(x => x.Currency).First()).First();            
+
+            return accounts;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო არის_თუ_არა_დოლარიანი_ანგარიშები_ლარიან_ანგარიშზე_მეტი_კლიენტების_სიიდან()
+        private static bool არის_თუ_არა_დოლარიანი_ანგარიშები_ლარიან_ანგარიშზე_მეტი_კლიენტების_სიიდან(List<Client> clients)
         {
-            return default;
+            var usdAcounts = clients.Select(x => x.Accounts.Where(x => x.Currency == Currency.USD)).Count();
+            var gelAcounts = clients.Select(x => x.Accounts.Where(x => x.Currency == Currency.GEL)).Count();
+
+
+
+            return usdAcounts > gelAcounts;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო არის_თუ_არა_კლიენტის_ერთ_ერთ_ანგარიშზე_მაინც_დოლარიანი_ვალუტა_ისეთი_კლიენტებიდან_რომელთა_გვარიც_ყველაზე_ხშირად_გვხვდება()
+        private static bool არის_თუ_არა_კლიენტის_ერთ_ერთ_ანგარიშზე_მაინც_დოლარიანი_ვალუტა_ისეთი_კლიენტებიდან_რომელთა_გვარიც_ყველაზე_ხშირად_გვხვდება(List<Client> clients)
         {
-            return default;
+            var topLastName = clients.GroupBy(x => x.LastName).OrderByDescending(x => x.Count()).First().Key;
+
+
+            var usdAcountFromTopLastName = 
+                clients.Where(x => x.LastName == topLastName).ToList()
+                .Select(x => x.Accounts.Where(x => x.Currency == Currency.USD))
+                .FirstOrDefault().Select(x => x.Currency)
+                .FirstOrDefault();
+                
+            return usdAcountFromTopLastName == Currency.USD;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ყველაზე_გრეძელი_გვარის_მქონე_გვარი_კლიენტებიდან()
+        private static List<string> წამოიღე_ყველაზე_გრეძელი_გვარის_მქონე_გვარი_კლიენტებიდან(List<Client> clients)
         {
-            return default;
+            var maxLenght = clients.Select(x => x.LastName.Length).Max();
+
+            var getMaxLenghtClient = clients.Where(x => (x.LastName.Length == maxLenght)). Select(x => x.LastName).Distinct().ToList();
+
+            return getMaxLenghtClient;
         }
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ყველაზე_მოკლე_გვარის_მქონე_გვარი_კლიენტებიდან()
+        private static List<string> წამოიღე_ყველაზე_მოკლე_გვარის_მქონე_გვარი_კლიენტებიდან(List<Client> clients)
         {
-            return default;
+            var minLenght = clients.Where(x => x.LastName.Length > 0).Select(x => x.LastName.Length).Min();
+
+            var getMinLenghtClient = clients.Where(x => (x.LastName.Length == minLenght)).Select(x => x.LastName).Distinct().ToList();
+
+            return getMinLenghtClient;
         }
 
 
         [დავალება]
-        private static რა_ტიპი_უნდა_ვიყო წამოიღე_ისეთი_კლიენტის_თანხის_ოდენობა_ისეთი_კლიენტებიდან_რომლის_სახელი_ყველაზე_ხშირად_გვხვდება_და_მისი_გვარი_ყველაზე_მოკლეა_მაგ_სიიდან()
+        private static decimal წამოიღე_ისეთი_კლიენტის_თანხის_ოდენობა_ისეთი_კლიენტებიდან_რომლის_სახელი_ყველაზე_ხშირად_გვხვდება_და_მისი_გვარი_ყველაზე_მოკლეა_მაგ_სიიდან(List<Client> clients)
         {
-            return default;
+
+            var clientsWithTopName = clients.GroupBy(x => x.FirstName).OrderByDescending(x => x.Count()).First().Select(x => x).ToList();
+
+            var minLenghtLastNsme = clientsWithTopName.Select(x => x.LastName.Length).Min();
+
+            var getMinLenghtClient = clientsWithTopName.Where(x => (x.LastName.Length == minLenghtLastNsme)).Select(x => x).ToList();
+
+            var getSumOfAmount = getMinLenghtClient.Sum(x => x.Accounts.Sum(x => x.Value));
+
+            return getSumOfAmount;
         }
     }
 
