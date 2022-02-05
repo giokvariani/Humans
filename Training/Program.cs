@@ -24,9 +24,10 @@ namespace Training
         static void Main(string[] args)
         {
             var clients = AccountMixer.Mix();
-            var Test = წამოიღე_ისეთი_კლიენტის_თანხის_ოდენობა_ისეთი_კლიენტებიდან_რომლის_სახელი_ყველაზე_ხშირად_გვხვდება_და_მისი_გვარი_ყველაზე_მოკლეა_მაგ_სიიდან(clients);
+            var currency = არის_თუ_არა_დოლარიანი_ანგარიშები_ლარიან_ანგარიშზე_მეტი_კლიენტების_სიიდან(clients);
 
-            
+
+
         }
 
 
@@ -79,7 +80,7 @@ namespace Training
         private static List<Client> წამოიღე_ისეთი_კლიენტები_რომელსაც_აქვს_ერთი_მაინც_დოლარიანი_ანგარიში(List<Client> clients)
         {
             var clientWhereContainsUSDAccount =
-                clients.Where(client => client.Accounts.Any(account => account.Currency == Currency.USD));
+                ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს(clients, Currency.USD);
             return clientWhereContainsUSDAccount.ToList();
         }
 
@@ -87,16 +88,15 @@ namespace Training
         private static List<Client> წამოიღე_ისეთი_კლიენტები_რომელსაც_აქვს_ერთი_მაინც_ევროანი_ანგარიში(List<Client> clients)
         {
             var clientWhereContainsUSDAccount =
-                clients.Where(client => client.Accounts.Any(account => account.Currency == Currency.EUR));
+                ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს(clients, Currency.EUR);
             return clientWhereContainsUSDAccount.ToList();
         }
 
         [დავალება]
-        private static List<Client> ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს(List<Client> clients)
+        private static List<Client> ზედა_ორ_მეთოდში_დუბლირებული_კოდის_შემჩნევა_საერთო_ლოგიკის_მეთოდში_გატანა_და_გამოძახება_ზედა_ორ_მეთოდში_ისე_რომ_აზრი_არ_შეიცვალოს
+            (List<Client> clients, Currency currency)
         {
-            var clientWithUSAndEURAccount = clients.Where(client => client.Accounts.Any(account => account.Currency == Currency.USD || account.Currency == Currency.EUR));
-
-
+            var clientWithUSAndEURAccount = clients.Where(client => client.Accounts.Any(account => account.Currency == currency));
             return clientWithUSAndEURAccount.ToList();
         }
 
@@ -173,20 +173,23 @@ namespace Training
         [დავალება]
         private static Currency წამოიღე_ყველაზე_ხშირი_ვალუტა_კლიენტების_სიიდან(List<Client> clients)
         {
-            var accounts = clients.Select(x => x.Accounts.GroupBy(x => x.Currency).OrderByDescending(x => x.Count()).First().Select(x => x.Currency).First()).First();            
-
-            return accounts;
+            var allAcount = clients.SelectMany(x => x.Accounts);
+            var gruopedByCurrencyAccounts = allAcount.GroupBy(x => x.Currency).OrderByDescending(x => x.Count());
+            return gruopedByCurrencyAccounts.First().Key;
         }
 
         [დავალება]
         private static bool არის_თუ_არა_დოლარიანი_ანგარიშები_ლარიან_ანგარიშზე_მეტი_კლიენტების_სიიდან(List<Client> clients)
         {
-            var usdAcounts = clients.Select(x => x.Accounts.Where(x => x.Currency == Currency.USD)).Count();
-            var gelAcounts = clients.Select(x => x.Accounts.Where(x => x.Currency == Currency.GEL)).Count();
+            var Accaunts = clients.SelectMany(x => x.Accounts);
+
+            var CountUSD = Accaunts.Where(x => x.Currency == Currency.USD).Count();
+
+            var CountGel =  Accaunts.Where(x => x.Currency == Currency.GEL).Count();          
 
 
 
-            return usdAcounts > gelAcounts;
+            return CountUSD > CountGel;
         }
 
         [დავალება]
