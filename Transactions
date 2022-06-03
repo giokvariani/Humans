@@ -1,0 +1,81 @@
+// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
+
+
+var aa = new string[] { "88 99 200", "88 99 300", "99 32 100", "12 12 15" };
+
+List<Transaction> transactions = new List<Transaction>();
+
+int thressold = 2;
+
+foreach (var item in aa)
+{
+    var value = item.Split(' ');
+    var transaction = new Transaction(value.First(), value.Skip(1).First(), value.Last());
+    transactions.Add(transaction);
+}
+
+
+var senders = transactions.Select(x => x.Sender);
+var receivers = transactions.Select(x => x.Receiver);
+var united = new[] { senders, receivers }.SelectMany(x => x).Distinct();
+var userReports = united.Select(x => new UserReport(x, transactions));
+var entries = userReports.Select(x => x.GetEntry()).Where(x => x.Transactions > thressold).Select(x => x.Id).OrderBy(x => x);
+
+foreach (var item in entries)
+{
+    Console.WriteLine(item);
+}
+
+var a = 5;
+
+
+public class Transaction
+{
+    public Transaction(string sender, string receiver, string amount)
+    {
+        Sender = sender;
+        Receiver = receiver;
+        Amount = amount;
+    }
+    public string Sender { get; set; }
+    public string Receiver { get; set; }
+    public string Amount { get; set; }
+
+
+
+}
+
+public class UserReport
+{
+    public UserReport(string user, List<Transaction> transactions)
+    {
+        User = user;
+        Transactions = transactions;
+    }
+    public string User { get; }
+    public List<Transaction> Transactions { get; }
+
+    public Entry GetEntry()
+    {
+        var filterTransactions = Transactions.Where(x => x.Sender == User || x.Receiver == User);
+
+        var entry = new Entry(filterTransactions.Count(), User);
+        return entry;
+    }
+
+
+    public class Entry
+    {
+        public Entry(int transaction, string id)
+        {
+            Transactions = transaction;
+            Id = id;
+        }
+        public int Transactions { get; set; }
+        public string Id { get; set; }
+    }
+}
+
+
+
